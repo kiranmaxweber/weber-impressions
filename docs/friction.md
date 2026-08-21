@@ -24,3 +24,5 @@ do differently."
   a model made to escalate without being told why fills the form with nothing. Fixed by
   appending a backstop paragraph to the system prompt for that one call. Lesson: a forced
   tool call still needs the model to agree with the premise, or it complies without meaning it.
+- 2026-08-21 — Tool events reach the UI with the reply, not live. The server returns JSON
+  once; the loader shows a generic line until then. Live needs SSE — deferred, flagged.
