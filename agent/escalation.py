@@ -64,24 +64,38 @@ def handoff(destination, intent, reason, summary, messages, trigger="model"):
 
 
 def zendesk(payload):
+    """Weber Impressions' help desk. OAuth client credentials: exchange the client id and
+    secret for a short-lived bearer token, then create the ticket. Zendesk stopped issuing
+    API tokens to new accounts in July 2026, so this is the only route for a trial. Renewing
+    an expired trial means three new values in .env and no code change."""
     subdomain = os.environ.get("ZENDESK_SUBDOMAIN")
-    email = os.environ.get("ZENDESK_EMAIL")
-    token = os.environ.get("ZENDESK_API_TOKEN")
-    if not (subdomain and email and token):
+    client_id = os.environ.get("ZENDESK_CLIENT_ID")
+    client_secret = os.environ.get("ZENDESK_CLIENT_SECRET")
+    if not (subdomain and client_id and client_secret):
         payload["delivered"] = False
         payload["reference"] = None
         payload["note"] = "No Zendesk credentials configured. The interface shows the customer this payload; tell them the request couldn't be filed."
         print(f"[handoff → weber-impressions] NOT DELIVERED\n{json.dumps(payload, indent=2, ensure_ascii=False)}")
         return payload
 
+    base = f"https://{subdomain}.zendesk.com"
+    token = requests.post(
+        f"{base}/oauth/tokens",
+        data={"grant_type": "client_credentials", "client_id": client_id,
+              "client_secret": client_secret, "scope": "tickets:write"},
+        timeout=15,
+    )
+    token.raise_for_status()
+    access_token = token.json()["access_token"]
+
     body = "\n".join(f"{t['role']}: {t['text']}" for t in payload["transcript"])
     r = requests.post(
-        f"https://{subdomain}.zendesk.com/api/v2/tickets.json",
-        auth=(f"{email}/token", token),
+        f"{base}/api/v2/tickets.json",
+        headers={"Authorization": f"Bearer {access_token}"},
         json={"ticket": {
             "subject": f"Order {ORDER['number']} — {payload['intent']}",
-            "comment": {"body": f"{payload['summary']}\n\nRouting: {payload['routing_reason']}\n\n{body}"},
-            "tags": ["concierge", payload["intent"]],
+            "comment": {"body": f"{payload['summary']}\n\nRouting: {payload['routing_reason']} (trigger: {payload['trigger']})\n\n{body}"},
+            "tags": ["concierge", payload["intent"], payload["trigger"]],
         }},
         timeout=15,
     )

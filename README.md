@@ -90,7 +90,7 @@ returns needs `publisher-2/devoluciones.md`.
 **Escalation is routing, not failure.** Destination follows ownership. The payload keeps its
 shape — transcript, summary, intent, customer context, `destination`, `routing_reason`,
 `trigger` — and the target varies. Weber Impressions goes to Zendesk if `.env` has
-credentials; without them the payload is shown in the conversation rather than dropped
+OAuth client credentials; without them the payload is shown in the conversation rather than dropped
 silently. The two publisher desks are stubs that log. One real, two mocked.
 
 **The backstop is deterministic; the signal is not.** Six customer turns without a tool call
