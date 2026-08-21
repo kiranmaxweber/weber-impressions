@@ -29,3 +29,6 @@ do differently."
 - 2026-08-21 — Streaming done after all: /chat now returns newline-delimited JSON, one line
   per tool event as it fires, then the result. ~35 lines across server.py and concierge.js.
   Cost is that /chat is no longer "post a list, get a list"; the docstring carries it.
+- 2026-08-21 — `git add -A` swept twelve unused font files into a commit and onto GitHub.
+  Caught by the clean-checkout test. Untracked and ignored; the lesson is to stage by name
+  when the working tree has things that aren't the repo's.
