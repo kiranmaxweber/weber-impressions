@@ -43,6 +43,10 @@ input.addEventListener("input", () => {
   composer.classList.toggle("typing", input.value.length > 0);
 });
 
+// The hint is for reading, not typing over: gone while the box has focus, back on blur.
+input.addEventListener("focus", () => composer.classList.add("focused"));
+input.addEventListener("blur", () => composer.classList.remove("focused"));
+
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -106,10 +110,8 @@ composer.addEventListener("submit", async (e) => {
     add("assistant", "Something went wrong on my side. Try that once more.");
   } finally {
     send.disabled = false;
-    input.focus();
     conversation.scrollTop = conversation.scrollHeight;
   }
 });
 
 showHint();
-input.focus();

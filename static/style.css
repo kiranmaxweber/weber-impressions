@@ -209,4 +209,4 @@ main { flex: 1; display: flex; flex-direction: column; }
   padding: 0 8px;
   border-radius: 3px;
 }
-.hint:empty, .composer.typing .hint { display: none; }
+.hint:empty, .composer.typing .hint, .composer.focused .hint { display: none; }
