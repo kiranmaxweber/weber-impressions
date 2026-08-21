@@ -110,6 +110,7 @@ composer.addEventListener("submit", async (e) => {
     add("assistant", "Something went wrong on my side. Try that once more.");
   } finally {
     send.disabled = false;
+    input.blur(); // so the next hint shows once the reply is in
     conversation.scrollTop = conversation.scrollHeight;
   }
 });
