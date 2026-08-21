@@ -36,8 +36,21 @@ function add(className, text) {
   return el;
 }
 
-// Replies are plain text from the model: paragraphs separated by blank lines, and lines
-// starting with "- " as a list. That's all the structure they carry, so that's all this renders.
+// Replies are plain text from the model: paragraphs separated by blank lines, lines
+// starting with "- " as a list, and **bold** for the line labels and the storefront's name.
+// That's all the structure they carry, so that's all this renders.
+function inline(el, text) {
+  const parts = text.split(/\*\*(.+?)\*\*/);
+  parts.forEach((part, i) => {
+    if (!part) return;
+    if (i % 2) {
+      const b = document.createElement("strong");
+      b.textContent = part;
+      el.appendChild(b);
+    } else el.appendChild(document.createTextNode(part));
+  });
+}
+
 function addReply(text) {
   const el = document.createElement("div");
   el.className = "turn assistant";
@@ -48,13 +61,13 @@ function addReply(text) {
       const ul = document.createElement("ul");
       for (const l of lines) {
         const li = document.createElement("li");
-        li.textContent = l.replace(/^\s*[-•]\s+/, "");
+        inline(li, l.replace(/^\s*[-•]\s+/, ""));
         ul.appendChild(li);
       }
       el.appendChild(ul);
     } else {
       const p = document.createElement("p");
-      p.textContent = lines.join(" ");
+      inline(p, lines.join(" "));
       el.appendChild(p);
     }
   }
