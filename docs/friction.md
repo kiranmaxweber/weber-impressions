@@ -10,3 +10,13 @@ do differently."
   escalation destinations.
 - 2026-08-21 — Added `publishers/*.sql` beside the adapters so the three shapes are readable
   without a Supabase account. Not in the `CLAUDE.md` repo shape; flagged.
+- 2026-08-21 — First manifest summaries carried the facts ("14 days, unread"), so the model
+  answered returns questions without reading the document. Rewrote them as topics only.
+  Lesson for the deck: a retrieval index that summarises too well replaces retrieval.
+- 2026-08-21 — `agent/order.py` added for the portal's order context (not in the `CLAUDE.md`
+  repo shape). The cancel gate keys off it: a charged line has shipped, so it can't be
+  cancelled — Weber Impressions' own truth, cross-checked against the publisher's status.
+- 2026-08-21 — Beat `aaa` as scripted ("only two have shipping notifications… when can I
+  expect them?") reads as a question about this order, and the model correctly checks the
+  records instead of answering from policy. Better agent, wrong beat. Proposed: change the
+  input, not the prompt.
