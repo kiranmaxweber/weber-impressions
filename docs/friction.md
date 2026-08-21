@@ -32,3 +32,7 @@ do differently."
 - 2026-08-21 — `git add -A` swept twelve unused font files into a commit and onto GitHub.
   Caught by the clean-checkout test. Untracked and ignored; the lesson is to stage by name
   when the working tree has things that aren't the repo's.
+- 2026-08-21 — Zendesk stopped issuing API tokens to new accounts on 28 July 2026, so the
+  trial had to use OAuth client credentials. One gotcha: the client must be *Confidential*,
+  or the token endpoint returns `unauthorized_client` with no hint that kind is the cause.
+  Renewal after trial expiry is three values in `.env`, no code change.
