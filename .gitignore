@@ -1,0 +1,10 @@
+# Secrets — never committed. The repo goes public at submission and history is permanent.
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
