@@ -32,9 +32,15 @@ def cancelled_lines(messages):
     return cancelled
 
 
+# The static greeting on the order page. Not in the message list, so it's added to the
+# transcript here. Keep in step with static/order.html.
+WELCOME = "Hello. I have order #94105 in front of me — three books, three publishers. What can I help with?"
+ORDER_NUMBER_FIELD = 52777396366100  # Zendesk custom ticket field: order number
+
+
 def transcript(messages):
-    """Plain turns only. Tool calls and results stay out of the ticket."""
-    turns = []
+    """Plain turns only, from the greeting on. Tool calls and results stay out of the ticket."""
+    turns = [{"role": "assistant", "text": WELCOME}]
     for m in messages:
         if isinstance(m["content"], str):
             turns.append({"role": m["role"], "text": m["content"]})
@@ -120,6 +126,7 @@ def zendesk(payload):
             "subject": f"Escalation from Concierge: {payload['intent']}",
             "comment": {"html_body": ticket_html(payload)},
             "requester": {"email": ORDER["customer_email"]},
+            "custom_fields": [{"id": ORDER_NUMBER_FIELD, "value": ORDER["number"]}],
             "tags": ["concierge", slug(payload["intent"]), payload["trigger"]],
         }},
         timeout=15,
@@ -162,9 +169,10 @@ def ticket_html(payload):
     )
     placed = "August 17, 2026"
     return (
-        f"<p>{e(payload['customer']['email'])} {e(summary)} {why}</p>"
-        f"<p><strong>Order #{e(payload['customer']['order'])}</strong><br>{placed}</p>"
-        f"<ul>{lines}</ul>"
+        f"<p>{e(payload['customer']['email'])} {e(summary)}</p>"
+        f"<p>{why}</p>"
+        f"<p><strong>Order {e(payload['customer']['order'])}</strong><br>{placed}</p>"  # no '#': Zendesk would link it as a ticket
+        f"<ul>{lines}</ul><br>"
         f"<p>${payload['customer']['order_total_usd']:.2f} USD</p>"
         f"<p><strong>Conversation</strong></p>"
         f"<ul>{turns}</ul>"
