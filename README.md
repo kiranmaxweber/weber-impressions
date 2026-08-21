@@ -89,8 +89,8 @@ returns needs `publisher-2/devoluciones.md`.
 
 **Escalation is routing, not failure.** Destination follows ownership. The payload keeps its
 shape — transcript, summary, intent, customer context, `destination`, `routing_reason`,
-`trigger` — and the target varies. Weber Impressions goes to Zendesk if `.env` has
-OAuth client credentials; without them the payload is shown in the conversation rather than dropped
+`trigger` — and the target varies. Weber Impressions goes to a real Zendesk via OAuth client credentials if `.env` has them — the ticket carries the
+summary, the order as it stands, and the whole conversation, with the customer as requester; without them the payload is shown in the conversation rather than dropped
 silently. The two publisher desks are stubs that log. One real, two mocked.
 
 **The backstop is deterministic; the signal is not.** Six customer turns without a tool call
@@ -104,6 +104,5 @@ tool call in the message list is the record; reloading the page resets the order
 
 ## Known limits
 
-- Tool events are shown after the reply returns, not streamed while the tools run.
 - Sign-in is a navigation, not an authentication.
 - Desktop only, 1440 wide.
