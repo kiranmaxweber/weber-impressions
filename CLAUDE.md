@@ -273,9 +273,9 @@ Fixed dates, not relative. Consistent with the FAQ dispatch and transit times:
 | | Dispatched | Arrives |
 |---|---|---|
 | Order placed | Mon Aug 17, 2026 | |
-| Publisher 1 — Eggleston, *Portraits* | Mon Aug 17 | Tue Aug 25 |
-| Publisher 2 — Meyerowitz, *Cape Light* | Wed Aug 19 | Fri Aug 28 |
-| Publisher 3 — Herzog, *Modern Color* | not yet | est. Tue Sep 8 |
+| Publisher 1 — William Eggleston — *William Eggleston's Guide* | Mon Aug 17 | Tue Aug 25 |
+| Publisher 2 — Joel Meyerowitz, *Cape Light* | Wed Aug 19 | Fri Aug 28 |
+| Publisher 3 — Fred Herzog, *Modern Color* | not yet | est. Tue Sep 8 |
 
 Order #94105. Total $305.00 USD. Customer needs the gift by **September 1** — Publishers 1
 and 2 make it, Publisher 3 misses, which is why it gets cancelled.
