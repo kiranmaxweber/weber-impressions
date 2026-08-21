@@ -6,12 +6,30 @@ is present, the Weber Impressions handoff is returned undelivered with the paylo
 never silently dropped.
 """
 
+import html
 import json
 import os
 
 import requests
 
 from agent.order import ORDER
+
+
+def cancelled_lines(messages):
+    """The transcript is the record. A cancel_line call that succeeded means the line is cancelled."""
+    succeeded = set()
+    for m in messages:
+        if m["role"] == "user" and isinstance(m["content"], list):
+            for b in m["content"]:
+                if b.get("type") == "tool_result" and not b.get("is_error"):
+                    succeeded.add(b["tool_use_id"])
+    cancelled = set()
+    for m in messages:
+        if m["role"] == "assistant" and isinstance(m["content"], list):
+            for b in m["content"]:
+                if b.get("type") == "tool_use" and b["name"] == "cancel_line" and b["id"] in succeeded:
+                    cancelled.add(int(b["input"]["publisher"]))
+    return cancelled
 
 
 def transcript(messages):
@@ -40,6 +58,12 @@ def stalled(messages, limit=6):
     return True
 
 
+def line_status(line, messages):
+    if line["publisher"] in cancelled_lines(messages):
+        return "cancelled in this conversation"
+    return "shipped" if line["charged"] else "not shipped"
+
+
 def handoff(destination, intent, reason, summary, messages, trigger="model"):
     """trigger is "model" when the model chose to escalate, "turn_limit" when code forced it.
     A forced handoff must be distinguishable from a chosen one in the ticket."""
@@ -49,7 +73,8 @@ def handoff(destination, intent, reason, summary, messages, trigger="model"):
         "routing_reason": reason,
         "intent": intent,
         "summary": summary,
-        "customer": {"order": ORDER["number"], "order_total_usd": ORDER["total_usd"]},
+        "customer": {"email": ORDER["customer_email"], "order": ORDER["number"], "order_total_usd": ORDER["total_usd"]},
+        "lines": [{"publisher": l["publisher"], "title": l["title"], "status": line_status(l, messages)} for l in ORDER["lines"]],
         "transcript": transcript(messages),
     }
 
@@ -88,14 +113,14 @@ def zendesk(payload):
     token.raise_for_status()
     access_token = token.json()["access_token"]
 
-    body = "\n".join(f"{t['role']}: {t['text']}" for t in payload["transcript"])
     r = requests.post(
         f"{base}/api/v2/tickets.json",
         headers={"Authorization": f"Bearer {access_token}"},
         json={"ticket": {
-            "subject": f"Order {ORDER['number']} — {payload['intent']}",
-            "comment": {"body": f"{payload['summary']}\n\nRouting: {payload['routing_reason']} (trigger: {payload['trigger']})\n\n{body}"},
-            "tags": ["concierge", payload["intent"], payload["trigger"]],
+            "subject": f"Escalation from Concierge: {payload['intent']}",
+            "comment": {"html_body": ticket_html(payload)},
+            "requester": {"email": ORDER["customer_email"]},
+            "tags": ["concierge", slug(payload["intent"]), payload["trigger"]],
         }},
         timeout=15,
     )
@@ -103,3 +128,44 @@ def zendesk(payload):
     payload["delivered"] = True
     payload["reference"] = r.json()["ticket"]["id"]
     return payload
+
+
+def slug(text):
+    return "-".join("".join(c.lower() if c.isalnum() else " " for c in text).split())
+
+
+def ticket_html(payload):
+    """The description a person at Weber Impressions reads. Who, what, why; the order as it
+    stands; the whole conversation."""
+    e = html.escape
+    summary = payload["summary"].strip()
+    for prefix in ("The customer ", "Customer "):
+        if summary.startswith(prefix):
+            summary = summary[len(prefix):]
+            break
+    reason = payload["routing_reason"].strip().rstrip(".")
+    reason = reason[0].lower() + reason[1:] if reason else reason
+    if payload["trigger"] == "turn_limit":
+        why = f"Concierge escalated after six turns without resolution: {e(reason)}."
+    else:
+        why = f"Concierge escalated because {e(reason)}."
+
+    lines = "".join(
+        f"<li>Publisher {l['publisher']} — {e(l['title'])} — "
+        + (f"<code>{e(l['status'])}</code>" if l["status"].startswith("cancelled") else e(l["status"]))
+        + "</li>"
+        for l in payload["lines"]
+    )
+    turns = "".join(
+        f"<li>{'Customer' if t['role'] == 'user' else 'Concierge'}: {e(t['text'])}</li>"
+        for t in payload["transcript"]
+    )
+    placed = "August 17, 2026"
+    return (
+        f"<p>{e(payload['customer']['email'])} {e(summary)} {why}</p>"
+        f"<p><strong>Order #{e(payload['customer']['order'])}</strong><br>{placed}</p>"
+        f"<ul>{lines}</ul>"
+        f"<p>${payload['customer']['order_total_usd']:.2f} USD</p>"
+        f"<p><strong>Conversation</strong></p>"
+        f"<ul>{turns}</ul>"
+    )

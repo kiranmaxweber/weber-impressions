@@ -10,7 +10,7 @@ import os
 
 import requests
 
-from agent.escalation import handoff
+from agent.escalation import cancelled_lines, handoff
 from agent.order import ORDER, line_for
 from publishers import publisher_1, publisher_2, publisher_3
 
@@ -56,9 +56,9 @@ TOOLS = [
             "type": "object",
             "properties": {
                 "destination": {"type": "string", "enum": DESTINATIONS},
-                "intent": {"type": "string", "description": "Short label, e.g. recommendation, return, damage, policy-exception"},
+                "intent": {"type": "string", "description": "What the customer needs, as a short noun phrase for the ticket subject, e.g. Book recommendation, Return request, Damaged book, Policy exception"},
                 "reason": {"type": "string", "description": "Why this destination owns it"},
-                "summary": {"type": "string", "description": "What the person picking this up needs to know"},
+                "summary": {"type": "string", "description": "One or two sentences starting \"Customer needs…\" — what they want, by when, anything the person picking this up must know"},
             },
             "required": ["destination", "intent", "reason", "summary"],
         },
@@ -82,23 +82,6 @@ def describe(name, args):
     return "Opening a request…"
 
 
-def cancelled_lines(messages):
-    """The transcript is the record. A cancel_line call that succeeded means the line is cancelled."""
-    succeeded = set()
-    for m in messages:
-        if m["role"] == "user" and isinstance(m["content"], list):
-            for b in m["content"]:
-                if b.get("type") == "tool_result" and not b.get("is_error"):
-                    succeeded.add(b["tool_use_id"])
-    cancelled = set()
-    for m in messages:
-        if m["role"] == "assistant" and isinstance(m["content"], list):
-            for b in m["content"]:
-                if b.get("type") == "tool_use" and b["name"] == "cancel_line" and b["id"] in succeeded:
-                    cancelled.add(int(b["input"]["publisher"]))
-    return cancelled
-
-
 def dispatch(name, args, messages, trigger="model"):
     """Run one tool. Returns (content, is_error). Errors go back to the model as text, never raised."""
     try:
@@ -111,8 +94,9 @@ def dispatch(name, args, messages, trigger="model"):
         if name == "escalate":
             return handoff(args["destination"], args["intent"], args["reason"], args["summary"], messages, trigger), False
         if name == "request_human":
-            return handoff("weber-impressions", "customer-requested-human",
-                           "The customer asked for a person.", "Customer asked to speak to someone.", messages), False
+            return handoff("weber-impressions", "Customer asked for a person",
+                           "the customer asked for a person, which is honoured without question",
+                           "Customer asked to speak to someone.", messages), False
         return f"No tool named {name}.", True
     except ToolError as e:
         return str(e), True

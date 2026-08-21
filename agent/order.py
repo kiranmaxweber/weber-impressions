@@ -6,6 +6,7 @@ has been charged. Fulfilment status belongs to each publisher and is fetched liv
 
 ORDER = {
     "number": "94105",
+    "customer_email": "photobookcollector@icloud.com",
     "placed": "2026-08-17",
     "total_usd": 305.00,
     "ship_to": "United States",
