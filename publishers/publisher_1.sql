@@ -18,6 +18,6 @@ alter table orders enable row level security;
 create policy "public read" on orders for select to anon using (true);
 
 insert into orders values (
-  'P1-30417', '94105', 'Portraits', 'William Eggleston', 'shipped',
+  'P1-30417', '94105', 'William Eggleston''s Guide', 'William Eggleston', 'shipped',
   '2026-08-17', '2026-08-25', 'DHL Express', '5820 4471 9903', 'US'
 );

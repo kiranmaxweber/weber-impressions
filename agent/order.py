@@ -10,7 +10,7 @@ ORDER = {
     "total_usd": 305.00,
     "ship_to": "United States",
     "lines": [
-        {"publisher": 1, "title": "Portraits", "author": "William Eggleston", "price_usd": 120.00, "charged": True},
+        {"publisher": 1, "title": "William Eggleston's Guide", "author": "William Eggleston", "price_usd": 120.00, "charged": True},
         {"publisher": 2, "title": "Cape Light", "author": "Joel Meyerowitz", "price_usd": 100.00, "charged": True},
         {"publisher": 3, "title": "Modern Color", "author": "Fred Herzog", "price_usd": 85.00, "charged": False},
     ],
