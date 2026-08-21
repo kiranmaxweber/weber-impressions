@@ -11,3 +11,9 @@ __pycache__/
 
 # Editor / tool config
 .claude/
+
+# Fonts: only the two faces the site uses are committed; the rest stay local for design work.
+static/fonts/*
+!static/fonts/OFL.txt
+!static/fonts/Spectral-Regular.ttf
+!static/fonts/Spectral-Bold.ttf
