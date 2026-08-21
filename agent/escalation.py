@@ -177,7 +177,7 @@ def ticket_html(payload):
         f"<p>{e(payload['customer']['email'])} {e(summary)}</p>"
         f"<p>{why}</p>"
         f"<p><strong>Order {e(payload['customer']['order'])}</strong> — <em>{placed}</em> — {total}</p>"  # no '#': Zendesk would link it as a ticket
-        f"<ul>{lines}</ul>"
+        f"<ul>{lines}</ul><br>"
         f"<p><strong>Conversation</strong></p>"
         f"<ul>{turns}</ul>"
     )
