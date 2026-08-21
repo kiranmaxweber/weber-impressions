@@ -113,6 +113,7 @@ composer.addEventListener("submit", async (e) => {
   add("you", text);
   messages.push({ role: "user", content: text });
   input.value = "";
+  composer.classList.remove("typing"); // no input event fires for a programmatic clear
   send.disabled = true;
   const events = addEvents();
   events.push("Concierge is looking…");
