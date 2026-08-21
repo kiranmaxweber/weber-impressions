@@ -95,7 +95,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 }
 
 /* Home — the grid. Two rows, fixed cover heights, widths as designed. */
-.covers { padding-top: 77px; padding-bottom: 56px; } /* fits an 850px laptop window without scrolling */
+.covers { padding-top: 77px; padding-bottom: 50px; } /* 75+77+352+25+216+50+51 = 846: fits an 850px laptop window */
 .covers .row { display: flex; gap: var(--gap); }
 .covers .row + .row { margin-top: 25px; }
 .covers figure { box-shadow: var(--shadow); overflow: hidden; }
