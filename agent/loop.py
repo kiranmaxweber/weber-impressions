@@ -33,6 +33,7 @@ def run_turn(messages, on_event=None):
     "Checking Publisher 2…" while the call is in flight rather than after."""
     events = []
     handoffs = []
+    start = len(messages)  # the reply is everything the model says this turn, before and after tools
 
     def event(text):
         events.append(text)
@@ -73,7 +74,11 @@ def run_turn(messages, on_event=None):
     else:
         messages.append({"role": "assistant", "content": [{"type": "text", "text": "I've gone round on this without getting anywhere. Let me put you in front of a person."}]})
 
-    reply = "".join(b["text"] for b in messages[-1]["content"] if b.get("type") == "text")
+    reply = "\n\n".join(
+        b["text"].strip()
+        for m in messages[start:] if m["role"] == "assistant"
+        for b in m["content"] if b.get("type") == "text" and b["text"].strip()
+    )
     return reply, messages, events, handoffs
 
 
