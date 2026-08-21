@@ -13,7 +13,8 @@ import sys
 import anthropic
 from dotenv import load_dotenv
 
-from agent.prompts import SYSTEM
+from agent.escalation import stalled
+from agent.prompts import BACKSTOP, SYSTEM
 from agent.tools import TOOLS, describe, dispatch, to_text
 
 load_dotenv()  # ANTHROPIC_API_KEY from .env; the SDK reads it from the environment
@@ -28,6 +29,10 @@ def run_turn(messages):
     """messages: the conversation so far, ending with the customer's new message.
     Returns (reply, messages, events). events is what each tool call was, for the UI."""
     events = []
+
+    if stalled(messages):
+        events.append("Opening a request…")
+        backstop(messages)  # the loop below then phrases the reply
 
     for _ in range(MAX_TOOL_ROUNDS):
         response = client.messages.create(
@@ -60,6 +65,26 @@ def run_turn(messages):
     reply = "".join(b["text"] for b in messages[-1]["content"] if b.get("type") == "text")
     return reply, messages, events
 
+
+def backstop(messages):
+    """Code decided it's time; the model decides how it's said. One call with the escalate
+    tool forced, so the destination, summary, and reason are the model's. The payload records
+    trigger=turn_limit so a forced handoff is never mistaken for a chosen one."""
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        system=SYSTEM + BACKSTOP,
+        tools=TOOLS,
+        tool_choice={"type": "tool", "name": "escalate"},
+        messages=messages,
+    )
+    messages.append({"role": "assistant", "content": [b.model_dump(exclude_none=True) for b in response.content]})
+    results = []
+    for block in response.content:
+        if block.type == "tool_use":
+            content, is_error = dispatch(block.name, block.input, messages, trigger="turn_limit")
+            results.append({"type": "tool_result", "tool_use_id": block.id, "content": to_text(content)})
+    messages.append({"role": "user", "content": results})
 
 if __name__ == "__main__":
     # A terminal session, for testing the loop without the browser.

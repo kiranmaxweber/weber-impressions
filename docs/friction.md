@@ -20,3 +20,7 @@ do differently."
   expect them?") reads as a question about this order, and the model correctly checks the
   records instead of answering from policy. Better agent, wrong beat. Proposed: change the
   input, not the prompt.
+- 2026-08-21 — The forced backstop call first returned "placeholder" for reason and summary:
+  a model made to escalate without being told why fills the form with nothing. Fixed by
+  appending a backstop paragraph to the system prompt for that one call. Lesson: a forced
+  tool call still needs the model to agree with the premise, or it complies without meaning it.

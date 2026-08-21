@@ -27,9 +27,25 @@ def transcript(messages):
     return turns
 
 
-def handoff(destination, intent, reason, summary, messages):
+def stalled(messages, limit=6):
+    """The deterministic backstop: six customer turns with no tool call of any kind — no
+    lookup, no cancel, no handoff. Checked against the message list, never the reply text."""
+    customer_turns = [i for i, m in enumerate(messages) if m["role"] == "user" and isinstance(m["content"], str)]
+    if len(customer_turns) < limit:
+        return False
+    since = customer_turns[-limit]
+    for m in messages[since:]:
+        if m["role"] == "assistant" and any(b.get("type") == "tool_use" for b in m["content"]):
+            return False
+    return True
+
+
+def handoff(destination, intent, reason, summary, messages, trigger="model"):
+    """trigger is "model" when the model chose to escalate, "turn_limit" when code forced it.
+    A forced handoff must be distinguishable from a chosen one in the ticket."""
     payload = {
         "destination": destination,
+        "trigger": trigger,
         "routing_reason": reason,
         "intent": intent,
         "summary": summary,

@@ -99,7 +99,7 @@ def cancelled_lines(messages):
     return cancelled
 
 
-def dispatch(name, args, messages):
+def dispatch(name, args, messages, trigger="model"):
     """Run one tool. Returns (content, is_error). Errors go back to the model as text, never raised."""
     try:
         if name == "read_faq":
@@ -109,7 +109,7 @@ def dispatch(name, args, messages):
         if name == "cancel_line":
             return cancel_line(int(args["publisher"]), messages), False
         if name == "escalate":
-            return handoff(args["destination"], args["intent"], args["reason"], args["summary"], messages), False
+            return handoff(args["destination"], args["intent"], args["reason"], args["summary"], messages, trigger), False
         if name == "request_human":
             return handoff("weber-impressions", "customer-requested-human",
                            "The customer asked for a person.", "Customer asked to speak to someone.", messages), False

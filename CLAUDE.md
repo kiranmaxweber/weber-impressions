@@ -151,8 +151,33 @@ address the customer by email address — that's a login, not a name.
 
 ## Escalation
 
-Build the decision for real. Multi-signal: order value, sentiment, turn count, transactional
-intent under low confidence.
+**The escalation design is the thesis in miniature: the model decides when to escalate;
+code decides what's forbidden.** Three mechanisms, and only one of them is a rule engine.
+
+**1. Code gates actions, not wording.** Deterministic, checked against order state — never
+against the text of a reply:
+
+- Unshipped line → **cancel permitted**, autonomously.
+- Shipped, refunded, or anything post-fulfilment → **blocked**, must escalate.
+
+The axis is **reversibility, not value.** A $150 cancel on an unshipped book is reversible
+and needs no human. A $5 refund on a shipped one is irreversible and does. Do not gate on
+order value or price thresholds — the books are ~$100 each, so a value rule would escalate
+the exact cancellation beat `eee` is built to demonstrate.
+
+**2. The model calls an `escalate` tool with a reason.** Frustration, confusion, circling,
+a question it can't source — all judgment, all what the model is for. **Do not keyword-match
+sentiment or confidence.** No frustration word lists, no scanning replies for "I think" or
+"probably." Two reasons: a customer spending $305 on photobooks writes "I've been waiting
+three weeks and nobody has replied," not "RIDICULOUS," so the list misses exactly the case
+that matters; and inspecting a generated reply for hedging means generating prose in order
+to throw it away.
+
+**3. Turn count is a deterministic backstop.** Six customer turns with no tool action and no
+handoff → escalate. Cheap, and it catches loops the model doesn't notice it's in.
+
+**Asking for a person is its own path**, not a sentiment signal. Immediate, never
+negotiated, no qualifying questions. Explicit in code — it's guardrail 2.
 
 **Destination follows ownership.** A recommendation belongs to Weber Impressions; a
 publisher's policy belongs to that publisher. The handoff payload keeps its shape and the
