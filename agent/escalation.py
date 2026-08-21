@@ -9,6 +9,7 @@ never silently dropped.
 import html
 import json
 import os
+import re
 
 import requests
 
@@ -144,7 +145,10 @@ def slug(text):
 def ticket_html(payload):
     """The description a person at Weber Impressions reads. Who, what, why; the order as it
     stands; the whole conversation."""
-    e = html.escape
+    def e(text):
+        # Zendesk links "#94105" to ticket 94105, which doesn't exist. Ticket text only.
+        return html.escape(re.sub(r"#(?=\d)", "", text))
+
     summary = payload["summary"].strip()
     for prefix in ("The customer ", "Customer "):
         if summary.startswith(prefix):
