@@ -21,9 +21,10 @@ const send = document.getElementById("send");
 const hint = document.getElementById("hint");
 
 function showHint() {
-  if (step === 0) hint.textContent = "Type aaa to begin";
-  else if (step < ORDER.length) hint.textContent = `Next: ${ORDER[step]}`;
-  else hint.textContent = "";
+  if (step === 0) hint.innerHTML = "Type <code>aaa</code> to begin";
+  else if (step < ORDER.length) hint.innerHTML = `Next: <code>${ORDER[step]}</code>`;
+  else hint.innerHTML = "";
+  composer.classList.toggle("typing", input.value.length > 0);
 }
 
 function add(className, text) {
@@ -39,6 +40,7 @@ function add(className, text) {
 input.addEventListener("input", () => {
   const text = input.value.trim();
   if (SHORTCUTS[text]) input.value = SHORTCUTS[text];
+  composer.classList.toggle("typing", input.value.length > 0);
 });
 
 input.addEventListener("keydown", (e) => {

@@ -40,8 +40,10 @@
         <div class="turn assistant">Hello. I have order #94105 in front of me — three books, three publishers. What can I help with?</div>
       </div>
       <form class="composer" id="composer">
-        <textarea id="input" aria-label="Message Concierge"></textarea>
-        <div class="hint" id="hint"></div>
+        <div class="box">
+          <textarea id="input" aria-label="Message Concierge"></textarea>
+          <div class="hint" id="hint" aria-hidden="true"></div>
+        </div>
         <button class="button" type="submit" id="send">Send</button>
       </form>
     </section>

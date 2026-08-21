@@ -40,7 +40,6 @@ class Handler(SimpleHTTPRequestHandler):
 
         self.send_response(200)
         self.send_header("Content-Type", "application/x-ndjson; charset=utf-8")
-        self.send_header("Cache-Control", "no-cache")
         self.end_headers()
 
         def line(obj):
@@ -54,6 +53,11 @@ class Handler(SimpleHTTPRequestHandler):
             print(f"[chat] {e.__class__.__name__}: {e}")
             line({"reply": "Something went wrong on my side. Try that once more, or ask for a person.",
                   "messages": messages[:-1], "handoffs": []})
+
+    def end_headers(self):
+        # Static files are never cached: a reviewer who pulls a change sees it on reload.
+        self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
 
     def log_message(self, fmt, *args):
         if "POST" in fmt % args or "chat" in fmt % args:
