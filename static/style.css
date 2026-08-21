@@ -170,7 +170,13 @@ main { flex: 1; display: flex; flex-direction: column; }
 }
 .conversation .turn + .turn { margin-top: 34px; }
 .conversation .you { color: var(--muted); }
-.conversation .event { color: var(--muted); font-size: var(--text-small); line-height: 20px; }
+.conversation .assistant p + p, .conversation .assistant p + ul, .conversation .assistant ul + p { margin-top: 17px; }
+.conversation .assistant ul { padding-left: 1.1em; }
+
+/* Tool events. While running: one per line. Done: a single muted line. */
+.conversation .events { color: var(--muted); font-size: var(--text-small); line-height: 20px; }
+.conversation .events span { display: block; }
+.conversation .turn.events + .turn { margin-top: 17px; }
 .conversation .handoff {
   margin-top: 12px;
   font-family: ui-monospace, Menlo, monospace;

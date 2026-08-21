@@ -36,6 +36,54 @@ function add(className, text) {
   return el;
 }
 
+// Replies are plain text from the model: paragraphs separated by blank lines, and lines
+// starting with "- " as a list. That's all the structure they carry, so that's all this renders.
+function addReply(text) {
+  const el = document.createElement("div");
+  el.className = "turn assistant";
+  for (const block of text.split(/\n\s*\n/)) {
+    const lines = block.split("\n").filter((l) => l.trim());
+    if (!lines.length) continue;
+    if (lines.every((l) => /^\s*[-•]\s/.test(l))) {
+      const ul = document.createElement("ul");
+      for (const l of lines) {
+        const li = document.createElement("li");
+        li.textContent = l.replace(/^\s*[-•]\s+/, "");
+        ul.appendChild(li);
+      }
+      el.appendChild(ul);
+    } else {
+      const p = document.createElement("p");
+      p.textContent = lines.join(" ");
+      el.appendChild(p);
+    }
+  }
+  conversation.appendChild(el);
+  conversation.scrollTop = conversation.scrollHeight;
+  return el;
+}
+
+// Tool events: one line each while the agent works, collapsed to a single muted line once
+// the reply is in. Showing the tool calls is the point; taking the room isn't.
+function addEvents() {
+  const el = document.createElement("div");
+  el.className = "turn events";
+  conversation.appendChild(el);
+  return {
+    push(text) {
+      const span = document.createElement("span");
+      span.textContent = text;
+      el.appendChild(span);
+      conversation.scrollTop = conversation.scrollHeight;
+    },
+    done() {
+      const names = [...el.children].map((s) => s.textContent).filter((t) => !t.startsWith("Concierge is looking"));
+      if (!names.length) el.remove();
+      else { el.textContent = names.join(" · "); el.classList.add("done"); }
+    },
+  };
+}
+
 // Typing a shortcut replaces it with the scripted message. Nothing is sent.
 input.addEventListener("input", () => {
   const text = input.value.trim();
@@ -66,7 +114,8 @@ composer.addEventListener("submit", async (e) => {
   messages.push({ role: "user", content: text });
   input.value = "";
   send.disabled = true;
-  const pending = add("event", "Concierge is looking…");
+  const events = addEvents();
+  events.push("Concierge is looking…");
 
   try {
     // The server streams newline-delimited JSON: an {event} line per tool call as it runs,
@@ -88,14 +137,15 @@ composer.addEventListener("submit", async (e) => {
       while ((nl = buffer.indexOf("\n")) >= 0) {
         const obj = JSON.parse(buffer.slice(0, nl));
         buffer = buffer.slice(nl + 1);
-        if (obj.event) add("event", obj.event);
+        if (obj.event) events.push(obj.event);
         else data = obj;
       }
     }
     if (!data) throw new Error("no reply");
     messages = data.messages;
-    pending.remove();
-    add("assistant", data.reply);
+    events.el = null;
+    events.done();
+    addReply(data.reply);
     for (const h of data.handoffs) {
       if (h && h.delivered === false) {
         const pre = document.createElement("pre");
@@ -105,7 +155,7 @@ composer.addEventListener("submit", async (e) => {
       }
     }
   } catch (err) {
-    pending.remove();
+    events.done();
     messages.pop();
     add("assistant", "Something went wrong on my side. Try that once more.");
   } finally {
