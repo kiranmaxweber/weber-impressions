@@ -36,3 +36,7 @@ do differently."
   trial had to use OAuth client credentials. One gotcha: the client must be *Confidential*,
   or the token endpoint returns `unauthorized_client` with no hint that kind is the cause.
   Renewal after trial expiry is three values in `.env`, no code change.
+- 2026-08-21 — One journey run stalled at `eee`: at `ddd` the model offered "cancel, or ask
+  Publisher 3 to expedite?", so "Yes, do that" was ambiguous and it asked again. Expediting
+  isn't an option any publisher publishes. Prompt now says one action, not a menu, and no
+  invented options. Scripted input depends on the agent's question having one answer.
