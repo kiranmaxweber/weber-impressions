@@ -34,11 +34,11 @@ class Handler(SimpleHTTPRequestHandler):
         body = json.loads(self.rfile.read(length) or b"{}")
         messages = body.get("messages", [])
         try:
-            reply, messages, events = run_turn(messages)
-            payload = {"reply": reply, "messages": messages, "events": events}
+            reply, messages, events, handoffs = run_turn(messages)
+            payload = {"reply": reply, "messages": messages, "events": events, "handoffs": handoffs}
         except Exception as e:  # the reviewer sees one line, never a stack trace in the chat
             print(f"[chat] {e.__class__.__name__}: {e}")
-            payload = {"reply": "Something went wrong on my side. Try that once more, or ask for a person.", "messages": messages[:-1], "events": []}
+            payload = {"reply": "Something went wrong on my side. Try that once more, or ask for a person.", "messages": messages[:-1], "events": [], "handoffs": []}
         out = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json; charset=utf-8")

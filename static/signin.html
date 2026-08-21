@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sign in — Weber Impressions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="contained">
+      <h1><a href="index.html">Weber Impressions</a></h1>
+      <a class="menu" href="signin.html" aria-label="Sign in"><img src="menu.svg" alt=""></a>
+    </div>
+  </header>
+
+  <main class="contained">
+    <!-- Credentials are pre-filled and nothing is checked. Authentication is out of scope;
+         the portal argument is that identity is resolved before Concierge speaks. -->
+    <form class="signin" action="order.html" method="get">
+      <fieldset>
+        <input type="email" name="email" value="photobookcollector@icloud.com" aria-label="Email" readonly>
+        <input type="password" name="password" value="correcthorse" aria-label="Password" readonly>
+      </fieldset>
+      <button class="button" type="submit">Sign In</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="contained">
+      <span>A photobook marketplace.</span>
+      <span>Copyright © 2026</span>
+    </div>
+  </footer>
+</body>
+</html>

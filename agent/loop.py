@@ -27,12 +27,14 @@ client = anthropic.Anthropic()
 
 def run_turn(messages):
     """messages: the conversation so far, ending with the customer's new message.
-    Returns (reply, messages, events). events is what each tool call was, for the UI."""
+    Returns (reply, messages, events, handoffs). events is what each tool call was, for the
+    UI; handoffs is any escalation payload produced this turn, so the UI can show it."""
     events = []
+    handoffs = []
 
     if stalled(messages):
         events.append("Opening a request…")
-        backstop(messages)  # the loop below then phrases the reply
+        handoffs.append(backstop(messages))  # the loop below then phrases the reply
 
     for _ in range(MAX_TOOL_ROUNDS):
         response = client.messages.create(
@@ -54,6 +56,8 @@ def run_turn(messages):
                 continue
             events.append(describe(block.name, block.input))
             content, is_error = dispatch(block.name, block.input, messages)
+            if block.name in ("escalate", "request_human") and not is_error:
+                handoffs.append(content)
             result = {"type": "tool_result", "tool_use_id": block.id, "content": to_text(content)}
             if is_error:
                 result["is_error"] = True
@@ -63,7 +67,7 @@ def run_turn(messages):
         messages.append({"role": "assistant", "content": [{"type": "text", "text": "I've gone round on this without getting anywhere. Let me put you in front of a person."}]})
 
     reply = "".join(b["text"] for b in messages[-1]["content"] if b.get("type") == "text")
-    return reply, messages, events
+    return reply, messages, events, handoffs
 
 
 def backstop(messages):
@@ -80,11 +84,13 @@ def backstop(messages):
     )
     messages.append({"role": "assistant", "content": [b.model_dump(exclude_none=True) for b in response.content]})
     results = []
+    payload = None
     for block in response.content:
         if block.type == "tool_use":
-            content, is_error = dispatch(block.name, block.input, messages, trigger="turn_limit")
-            results.append({"type": "tool_result", "tool_use_id": block.id, "content": to_text(content)})
+            payload, is_error = dispatch(block.name, block.input, messages, trigger="turn_limit")
+            results.append({"type": "tool_result", "tool_use_id": block.id, "content": to_text(payload)})
     messages.append({"role": "user", "content": results})
+    return payload
 
 if __name__ == "__main__":
     # A terminal session, for testing the loop without the browser.
@@ -95,7 +101,7 @@ if __name__ == "__main__":
             continue
         print(f"\n> {text}")
         messages.append({"role": "user", "content": text})
-        reply, messages, events = run_turn(messages)
+        reply, messages, events, handoffs = run_turn(messages)
         for e in events:
             print(f"  [{e}]")
         print(reply)

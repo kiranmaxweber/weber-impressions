@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Order #94105 — Weber Impressions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="contained">
+      <h1><a href="index.html">Weber Impressions</a></h1>
+      <a class="menu" href="signin.html" aria-label="Sign in"><img src="menu.svg" alt=""></a>
+    </div>
+  </header>
+
+  <main class="contained order-page">
+    <section class="order">
+      <h2>Order #94105</h2>
+      <dl>
+        <dt>Placed</dt>
+        <dd>August 17, 2026</dd>
+
+        <dt>Title</dt>
+        <dd class="publisher">Publisher 1</dd>
+        <dd>William Eggleston — Portraits</dd>
+        <dd class="publisher">Publisher 2</dd>
+        <dd>Joel Meyerowitz — Cape Light</dd>
+        <dd class="publisher">Publisher 3</dd>
+        <dd>Fred Herzog — Modern Color</dd>
+
+        <dt>Total price</dt>
+        <dd>$305.00 USD</dd>
+      </dl>
+    </section>
+
+    <section class="concierge">
+      <h2>Concierge</h2>
+      <div class="conversation" id="conversation">
+        <!-- Static. No call on page load: a greeting isn't a reasoning task. -->
+        <div class="turn assistant">Hello. I have order #94105 in front of me — three books, three publishers. What can I help with?</div>
+      </div>
+      <form class="composer" id="composer">
+        <textarea id="input" aria-label="Message Concierge"></textarea>
+        <div class="hint" id="hint"></div>
+        <button class="button" type="submit" id="send">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="contained">
+      <span>A photobook marketplace.</span>
+      <span>Copyright © 2026</span>
+    </div>
+  </footer>
+
+  <script src="concierge.js"></script>
+</body>
+</html>
