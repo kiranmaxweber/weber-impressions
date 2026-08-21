@@ -26,3 +26,6 @@ do differently."
   tool call still needs the model to agree with the premise, or it complies without meaning it.
 - 2026-08-21 — Tool events reach the UI with the reply, not live. The server returns JSON
   once; the loader shows a generic line until then. Live needs SSE — deferred, flagged.
+- 2026-08-21 — Streaming done after all: /chat now returns newline-delimited JSON, one line
+  per tool event as it fires, then the result. ~35 lines across server.py and concierge.js.
+  Cost is that /chat is no longer "post a list, get a list"; the docstring carries it.

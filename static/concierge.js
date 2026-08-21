@@ -63,15 +63,32 @@ composer.addEventListener("submit", async (e) => {
   const pending = add("event", "Concierge is looking…");
 
   try {
+    // The server streams newline-delimited JSON: an {event} line per tool call as it runs,
+    // then the final {reply, messages, handoffs} line.
     const r = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages }),
     });
-    const data = await r.json();
+    const reader = r.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let data = null;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let nl;
+      while ((nl = buffer.indexOf("\n")) >= 0) {
+        const obj = JSON.parse(buffer.slice(0, nl));
+        buffer = buffer.slice(nl + 1);
+        if (obj.event) add("event", obj.event);
+        else data = obj;
+      }
+    }
+    if (!data) throw new Error("no reply");
     messages = data.messages;
     pending.remove();
-    for (const ev of data.events) add("event", ev);
     add("assistant", data.reply);
     for (const h of data.handoffs) {
       if (h && h.delivered === false) {

@@ -25,15 +25,22 @@ MAX_TOOL_ROUNDS = 8
 client = anthropic.Anthropic()
 
 
-def run_turn(messages):
+def run_turn(messages, on_event=None):
     """messages: the conversation so far, ending with the customer's new message.
     Returns (reply, messages, events, handoffs). events is what each tool call was, for the
-    UI; handoffs is any escalation payload produced this turn, so the UI can show it."""
+    UI; handoffs is any escalation payload produced this turn, so the UI can show it.
+    on_event, if given, is called with each event as it happens — that's how the UI shows
+    "Checking Publisher 2…" while the call is in flight rather than after."""
     events = []
     handoffs = []
 
+    def event(text):
+        events.append(text)
+        if on_event:
+            on_event(text)
+
     if stalled(messages):
-        events.append("Opening a request…")
+        event("Opening a request…")
         handoffs.append(backstop(messages))  # the loop below then phrases the reply
 
     for _ in range(MAX_TOOL_ROUNDS):
@@ -54,7 +61,7 @@ def run_turn(messages):
         for block in response.content:
             if block.type != "tool_use":
                 continue
-            events.append(describe(block.name, block.input))
+            event(describe(block.name, block.input))
             content, is_error = dispatch(block.name, block.input, messages)
             if block.name in ("escalate", "request_human") and not is_error:
                 handoffs.append(content)
