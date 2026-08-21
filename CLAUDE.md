@@ -23,7 +23,7 @@ ambiguous, resolve it in that direction.
 ## Stack
 
 - **Python** — server, agent loop, tools. Anthropic SDK called directly.
-- **HTML / CSS / vanilla JS** — four static screens. No framework.
+- **HTML / CSS / vanilla JS** — three static screens. No framework.
 - **Supabase** — three separate projects, one per publisher, real APIs over the network.
 - **Spectral** (SIL OFL), self-hosted in `static/fonts/`.
 
@@ -44,7 +44,7 @@ agent/
 publishers/
   publisher_1.py    Clean JSON adapter
   publisher_2.py    Spanish JSON adapter, renamed fields
-  publisher_3.py    French raw_email parser
+  publisher_3.py    French raw_email adapter — hands the email to the model, no parsing
 faqs/               Retrieval corpus, by owner
 static/             Three screens, CSS, fonts
 docs/
