@@ -168,17 +168,16 @@ def ticket_html(payload):
         for l in payload["lines"]
     )
     turns = "".join(
-        f"<li>{'Customer' if t['role'] == 'user' else 'Concierge'}: {e(t['text']).replace(chr(10), '<br>')}</li>"
+        f"<li>{'Customer' if t['role'] == 'user' else 'Concierge'}: {e(t['text'])}</li>"
         for t in payload["transcript"]
     )
     placed = "August 17, 2026"
-    total = f"${payload['customer']['order_total_usd']:.2f} USD"
+    total = f"${payload['customer']['order_total_usd']:.2f} USD".replace(".00 ", " ")
     return (
         f"<p>{e(payload['customer']['email'])} {e(summary)}</p>"
         f"<p>{why}</p>"
-        f"<p><strong>Order {e(payload['customer']['order'])}</strong><br>{placed}</p>"  # no '#': Zendesk would link it as a ticket
-        f"<ul>{lines}</ul><br>"
-        f"<p>{total}</p>"
+        f"<p><strong>Order {e(payload['customer']['order'])}</strong> — <em>{placed}</em> — {total}</p>"  # no '#': Zendesk would link it as a ticket
+        f"<ul>{lines}</ul>"
         f"<p><strong>Conversation</strong></p>"
         f"<ul>{turns}</ul>"
     )
