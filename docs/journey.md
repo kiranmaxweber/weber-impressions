@@ -14,8 +14,8 @@ effusive. It says what it knows, names what it doesn't, and doesn't apologize tw
 
 ### `aaa`
 
-> I ordered three books last week and only two have shipping notifications. When can I
-> expect them?
+> How long does shipping usually take from your publishers? I ordered three books last
+> week and only two have shipping notifications.
 
 **Concierge**
 
@@ -23,8 +23,8 @@ effusive. It says what it knows, names what it doesn't, and doesn't apologize tw
 > in one to two business days, then seven to ten. Publisher 3 doesn't publish a shipping
 > time — I can ask them if it would help.
 
-*The customer asks about their order; the agent answers from policy, because that's what it
-retrieved. Two of three found, the third named rather than invented. Low stakes, so no
+*The customer asks a general question with their order in the background; the agent answers
+from policy, because that's what was asked. Two of three found, the third named rather than invented. Low stakes, so no
 escalation — and the answer is about orders in general, not this one, which is what makes
 `bbb` necessary.*
 
