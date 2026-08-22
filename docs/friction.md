@@ -40,3 +40,7 @@ do differently."
   Publisher 3 to expedite?", so "Yes, do that" was ambiguous and it asked again. Expediting
   isn't an option any publisher publishes. Prompt now says one action, not a menu, and no
   invented options. Scripted input depends on the agent's question having one answer.
+- 2026-08-21 — The loop returned only the model's final message, so anything it said before
+  a tool call — the booksellers' line at `fff` — reached the ticket transcript but never the
+  screen. Found by comparing journey.md to what the reviewer sees. Reply is now every text
+  block of the turn.
