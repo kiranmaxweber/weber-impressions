@@ -142,6 +142,10 @@ main { flex: 1; display: flex; flex-direction: column; }
   cursor: pointer;
 }
 
+.forgot { margin-top: 25px; text-align: center; }
+.forgot a { color: var(--black); }
+.forgot-sent { margin-top: 17px; text-align: center; color: var(--muted); }
+
 /* Order | Concierge. Two columns, a vertical rule between them at x=525 (comp "page 2"):
    the order needs ~490px; the conversation gets the rest. */
 .order-page { display: flex; flex-direction: row; padding-top: 64px; padding-bottom: 25px; flex: 1; min-height: 0; }

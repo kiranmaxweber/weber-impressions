@@ -18,7 +18,7 @@ weber-impressions/  (English — the storefront's own policies)
   privacy.md                      What's kept and what's shared with publishers
   signed-and-limited-editions.md  Signed copies, numbering, returnability
   taxes-and-customs.md            Sales tax, import duty, customs declarations
-  your-account.md                 Accounts, address changes, closing an account
+  your-account.md                 Accounts, password reset, address changes, closing an account
 
 publisher-1/  (English)
   shipping.md                     Dispatch time and transit times by region

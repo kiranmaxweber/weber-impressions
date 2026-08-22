@@ -8,3 +8,6 @@ publisher. Once a parcel is with a carrier, the address is theirs to change and 
 can't be.
 
 To close an account, ask. We'll remove it and confirm.
+
+To reset your password, use the link on the sign-in page. We'll email you; the link is good
+for an hour. We can't see your password and won't set one for you.

@@ -22,6 +22,9 @@
         <input type="password" name="password" value="correcthorse" aria-label="Password" readonly>
       </fieldset>
       <button class="button" type="submit">Sign In</button>
+      <!-- No auth behind this either. The FAQ says a reset link is emailed; this says so. -->
+      <p class="forgot"><a href="#" id="forgot">Forgot password?</a></p>
+      <p class="forgot-sent" id="forgot-sent" hidden>Reset link sent to photobookcollector@icloud.com.</p>
     </form>
   </main>
 
@@ -31,5 +34,11 @@
       <span>Copyright © 2026</span>
     </div>
   </footer>
+  <script>
+    document.getElementById("forgot").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("forgot-sent").hidden = false;
+    });
+  </script>
 </body>
 </html>
