@@ -91,7 +91,8 @@ def handoff(destination, intent, reason, summary, messages, trigger="model"):
     # Publisher help desks — stubbed. Logged so the shape is visible in the server output.
     print(f"[handoff → {destination}] (stub)\n{json.dumps(payload, indent=2, ensure_ascii=False)}")
     payload["delivered"] = True
-    payload["reference"] = f"logged to {destination} (stubbed destination)"
+    payload["reference"] = None  # stubbed desks issue no number; say the request is with the publisher and stop
+    payload["note"] = f"Logged for {destination} (stubbed destination). No reference number."
     return payload
 
 
