@@ -144,7 +144,12 @@ main { flex: 1; display: flex; flex-direction: column; }
 
 .forgot { margin-top: 25px; text-align: center; }
 .forgot a { color: var(--black); }
-.forgot-sent { margin-top: 17px; text-align: center; color: var(--muted); }
+.forgot-sent {
+  margin: 17px -100px 0;   /* wider than the 450px column so the line doesn't wrap; still centred */
+  text-align: center;
+  white-space: nowrap;
+  color: var(--muted);
+}
 
 /* Order | Concierge. Two columns, a vertical rule between them at x=525 (comp "page 2"):
    the order needs ~490px; the conversation gets the rest. */
