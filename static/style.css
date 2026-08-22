@@ -105,10 +105,11 @@ main { flex: 1; display: flex; flex-direction: column; }
 .w-443 { width: 443px; } .w-364 { width: 364px; } .w-288 { width: 288px; } .w-249 { width: 249px; }
 .w-237 { width: 237px; } .w-263 { width: 263px; } .w-181 { width: 181px; } .w-216 { width: 216px; } .w-212 { width: 212px; }
 
-/* Sign in. Credentials pre-filled; submit navigates. */
+/* Sign in. Credentials pre-filled; submit navigates. Top-anchored at y=152, where the
+   home grid and the order columns start. Fields and button match the composer row's 125. */
 .signin {
   width: 450px;
-  margin: 225px auto 0;
+  margin: 77px auto 0;
 }
 .signin fieldset {
   border: var(--rule);
@@ -117,7 +118,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 .signin input {
   display: block;
   width: 100%;
-  height: 100px;
+  height: 124px;
   border: 0;
   font: inherit;
   text-align: center;
@@ -130,7 +131,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 .button {
   display: block;
   width: 100%;
-  height: 100px;
+  height: 125px;
   margin-top: 25px;
   border: 0;
   border-radius: 5px;
