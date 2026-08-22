@@ -173,8 +173,9 @@ against the text of a reply:
 
 The axis is **reversibility, not value.** A $150 cancel on an unshipped book is reversible
 and needs no human. A $5 refund on a shipped one is irreversible and does. Do not gate on
-order value or price thresholds — the books are ~$100 each, so a value rule would escalate
-the exact cancellation beat `eee` is built to demonstrate.
+order value or price thresholds — the books are ~$100 each, and a value rule would put a
+human in front of the one action that needs none, which is also why the journey's
+cancellation completes without one.
 
 **2. The model calls an `escalate` tool with a reason.** Frustration, confusion, circling,
 a question it can't source — all judgment, all what the model is for. **Do not keyword-match
@@ -267,7 +268,7 @@ slack. White throughout; the two columns are split by a 1px vertical rule at x=5
 
 **Ask for semantic HTML and CSS custom properties** for the type scale and spacing.
 Figma-to-code defaults to absolute positioning and magic numbers — that code has to be
-readable by a reviewer and by Kiran.
+readable by a reviewer.
 
 **Red (`#E83826`) marks where to click** — the menu icon on Home, the Sign in button, the
 send arrow. The only color on the site, so it reads as deliberate wayfinding rather than
@@ -342,8 +343,7 @@ by name; don't source substitutes.
 
 - **Readable over clever.** Few files, no abstractions, traceable top to bottom out loud.
   Every line has to be defensible in an interview.
-- **Explain before changing.** If Kiran can't explain a change, it doesn't go in. He directs
-  this build and does not write Python.
+- **Explain before changing.** If Kiran can't explain a change, it doesn't go in.
 - **`ANTHROPIC_API_KEY` in `.env` from the first commit.** `.gitignore` it. Commit
   `.env.example`. Server checks at startup and prints one clear line if missing — no
   interactive prompt.
