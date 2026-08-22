@@ -69,7 +69,6 @@ agent/order.py         The order as the portal knows it — what was bought, wha
 publishers/            Three adapters and the SQL that built their tables.
 faqs/                  25 documents, organised by owner, three languages, no translations.
 static/                Three screens. Semantic HTML, custom properties, vanilla JS.
-docs/                  decisions.md (the reasoning), journey.md (the script), friction.md (the log).
 ```
 
 No agent framework. The Anthropic SDK is called directly and the loop is in the file.
