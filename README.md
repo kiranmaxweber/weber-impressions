@@ -17,7 +17,7 @@ run, and the name reads like a press. Nothing else about the brief changed.)*
 Python 3.10 or newer.
 
 ```bash
-git clone <this repo> && cd weber-impressions
+git clone https://github.com/kiranmaxweber/weber-impressions.git && cd weber-impressions
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env        # then paste your Anthropic key into ANTHROPIC_API_KEY
@@ -32,14 +32,14 @@ adapters, so the only credential you supply is the Anthropic key.
 
 ## The path
 
-Red marks where to click: the menu, Sign in, Send.
+Red marks where to click: the menu on the home page, Sign in, the send arrow.
 
 1. **Home** → the menu (top right) → **Sign in** → the button. Credentials are pre-filled;
    nothing is checked. Authentication is out of scope, and the point of the portal is that
    identity and order are resolved before anyone types.
 2. **Order #94105 | Concierge.** Type `aaa` in the box. It expands into the first message
-   without sending, so you can read it first. Send it. The hint under the box advances —
-   `Next: bbb` — through `fff`.
+   without sending, so you can read it first. Send it. The hint in the box advances — *Type
+   `bbb` to continue* — through *Type `fff` to finish*.
 
 | | You type | What to notice |
 |---|---|---|
@@ -88,9 +88,11 @@ returns needs `publisher-2/devoluciones.md`.
 
 **Escalation is routing, not failure.** Destination follows ownership. The payload keeps its
 shape — transcript, summary, intent, customer context, `destination`, `routing_reason`,
-`trigger` — and the target varies. Weber Impressions goes to a real Zendesk via OAuth client credentials if `.env` has them — the ticket carries the
-summary, the order as it stands, and the whole conversation, with the customer as requester; without them the payload is shown in the conversation rather than dropped
-silently. The two publisher desks are stubs that log. One real, two mocked.
+`trigger` — and the target varies. Weber Impressions goes to a real Zendesk via OAuth
+client credentials if `.env` has them; the ticket carries the summary, the order as it
+stands, and the whole conversation, with the customer as requester. Without them the payload
+is shown in the conversation rather than dropped silently. The two publisher desks are stubs
+that log. One real, two mocked.
 
 **The backstop is deterministic; the signal is not.** Six customer turns without a tool call
 force an `escalate` call — code decides it's time, the model writes the summary, and the
