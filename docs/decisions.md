@@ -75,10 +75,10 @@ loaded. The "one place" is the repo, not a transcript.
 | Language | **Python** (server) + HTML/CSS/JS (front end) | Readable cold; what a reviewer expects |
 | LLM | **Anthropic**, SDK called **raw**; key via `.env` | Reviewer supplies their own key |
 | Framework | **None** | See below |
-| Interface | Four static screens + Concierge panel, HTML/CSS/JS | §6A |
-| FAQs | 24 authored markdown articles in `faqs/`, by owner, three languages | §4 |
+| Interface | Three static screens + Concierge panel, HTML/CSS/JS | §6A |
+| FAQs | 25 authored markdown articles in `faqs/`, by owner, three languages, read via a manifest | §4 |
 | Backends | **Three Supabase projects** (Pro plan), one per publisher, differing shapes | §6B |
-| Escalation targets | Mocked, multi-destination. Real help desk trials are a stretch | §8 |
+| Escalation targets | Multi-destination. Weber Impressions → real Zendesk (OAuth client credentials); two publisher desks stubbed | §8 |
 | Deck | **Figma Slides** → exported PDF, Adobe Fonts | §10 |
 | Diagram | Figma, placed in the deck | §10 |
 | Delivery | GitHub repo + README script; recording optional | §11 |
@@ -144,7 +144,7 @@ document. That's the actual hard problem in CX AI, and the assignment's single-b
 framing lets most candidates skip it. Frame it as *differing policy*, never as integration
 count.
 
-**One publisher has no API.** Order status lives in a confirmation email or a portal a human
+**One publisher has no structured API.** Order status lives in a confirmation email or a portal a human
 logs into. A real architectural fork — different latency, reliability, and risk — landing on
 Decagon's Browser Actions story, arrived at independently.
 
@@ -185,10 +185,10 @@ of the shape and what each beat proves:
 
 | Beat | What happens | What it demonstrates |
 |---|---|---|
-| `aaa` | Customer asks when three books will arrive. Agent answers from **policy** — two publishers found, Publisher 3's shipping time missing and named rather than invented | Grounded retrieval; refusing to invent at low cost |
-| `bbb` | Customer pushes past the general answer to their actual order | Three APIs, three shapes: clean JSON, renamed fields with Spanish status values, a confirmation email parsed for a date |
+| `aaa` | Customer asks how long shipping usually takes, order in the background. Agent answers from **policy** — two publishers found, Publisher 3's shipping time missing and named rather than invented | Grounded retrieval; refusing to invent at low cost |
+| `bbb` | Customer pushes past the general answer to their actual order | Three APIs, three shapes: clean JSON, renamed fields with Spanish status values, a confirmation email the model reads a date out of — no parsing in code |
 | `ccc` | "One won't arrive in time." Agent asks *which one* and *by what date* | Won't act on ambiguity — the required clarifying question |
-| `ddd` | Publisher 3, needed by the 28th. Agent offers **cancel, not return**, because nothing has shipped | The reversibility line, made visible |
+| `ddd` | Publisher 3, needed by September 1. Agent offers **cancel, not return**, because nothing has shipped | The reversibility line, made visible |
 | `eee` | Cancelled, no charge | The autonomous action — reversible, so no permission and no human |
 | `fff` | Customer asks for a recommendation. Agent declines and opens a request for a virtual shopping session | Restraint as a feature; escalation as **routing, not failure** |
 
@@ -275,12 +275,15 @@ read the brief.
 — it reads as a storefront rather than three hand-picked partners. Real publisher names and
 screenshots go in the **deck** to set the stage, not in the build.
 
-**Three screens, HTML/CSS/JS, minimal interaction** (the order list was later cut):
+**Three screens, HTML/CSS/JS, minimal interaction** (the order list was cut):
 
 1. **Home** — editorial grid of covers.
-2. **Sign in** — reached by the hamburger. Credentials pre-filled; one click.
-3. **Orders + Concierge** — order list left, Concierge right.
-4. **Order detail + Concierge** — same screen, left side becomes the full order.
+2. **Sign in** — reached by the menu icon. Credentials pre-filled; one click.
+3. **Order | Concierge** — the one order left, Concierge right. The menu icon here returns
+   home, as a "start over."
+
+Height follows the viewport rather than the comp's 900: a 14" MacBook browser is nearer
+850, so nothing is pinned and the conversation pane takes the slack.
 
 Concierge stays present from screen 3 onward. Identity and order context are resolved by
 the time anyone talks to it — the portal argument (§6) made concrete.
@@ -461,8 +464,8 @@ restatement of their blog.
 2. *Orchestration decides the turn.* One LLM call with tools and system prompt, loop around
    it. Four outcomes: answer from knowledge, call a tool, ask a clarifying question, hand
    off. Only two loop.
-3. *Tools.* Three publisher lookups behind one interface, one non-API. KB search. Return
-   action.
+3. *Tools.* Three publisher lookups behind one interface, one unstructured. FAQ reads
+   chosen from a manifest. The cancel action, gated in code. Escalate, and request-a-person.
 4. *Memory.* Session state is the message list; customer context comes from the portal.
 5. *Prompts.* System prompt carries policy — what may be asserted, what must be refused,
    when to escalate.
@@ -476,10 +479,13 @@ restatement of their blog.
   session: the message list passed back each turn. (2) Customer context from the system of
   record: identity, orders, history. The portal supplies the second for free.
 
-**Escalation is a first-class component.** The decision to escalate is built for real; the
-destination is mocked. Policy is multi-signal — order value, sentiment, turn count,
-transactional intent under low confidence — not a single trigger. The AOP shape: natural-
-language conditions with a code guardrail on the consequential branch. Also the answer to
+**Escalation is a first-class component.** The decision to escalate is built for real, and
+one destination is real. Three mechanisms: code gates *actions* against order state
+(unshipped → cancel permitted; shipped → blocked, escalate) — reversibility, never a value
+threshold; the model calls an `escalate` tool with a reason — no sentiment word lists, no
+scanning replies for hedging; and a turn-count backstop (six customer turns without a tool
+call) forces an `escalate` call with `trigger: turn_limit` recorded in the payload. The AOP
+shape: natural-language judgment with a code guardrail on the consequential branch. Also the answer to
 Zendesk's sharpest attack on Decagon, *"infrastructure-less, exposed at the escalation."*
 
 **Escalation is multi-destination, and that's a Decagon value prop.** Each publisher runs a
@@ -545,17 +551,19 @@ and here's the business where that trade is correct.
 **In scope:**
 
 - The agent loop, hand-written
-- KB search over ~12 authored articles, one deliberately missing
-- Three publisher order lookups behind one interface, one non-API
-- The return/cancel/expedite decision with a code guardrail on the money action
+- FAQ retrieval over 25 authored articles via a manifest of owner, language, topic; Publisher 3 has no shipping document
+- Three publisher order lookups behind one interface, one unstructured (French email, read by the model)
+- The cancel decision with a code guardrail: charged means shipped means blocked
 - Clarifying question when the order is ambiguous
 - Escalation: agent-initiated *and* customer-requested
 - Handoff payload with a destination that varies by publisher
-- Four static screens (home, sign-in, orders + Concierge, order detail + Concierge)
+- Three static screens (home, sign-in, order + Concierge)
 - The scripted `aaa`–`fff` journey shortcut, visible-then-submit
 - Type: Spectral, self-hosted
 
-**Stretch — decide after the agent works end to end and the deck exists:**
+**Stretch — decided:** one real destination, built. Zendesk stopped issuing API tokens to
+new accounts in July 2026, so the trial authenticates with OAuth client credentials (the
+client must be *Confidential*). Help Scout and Front were not pursued. Original reasoning:
 
 - **Real help desk destinations.** Free trials of Help Scout and Front alongside Zendesk, so
   one conversation lands in three products. Makes multi-destination demonstrable rather than
@@ -625,7 +633,7 @@ judgment ones. 4 is arguably thesis material.
 - Signed-in portal, auth out of scope — and what changes on an anonymous channel
 - KB authored rather than scraped, so the gap could be deliberate
 - Three publishers, one deliberately without an API
-- Mocked backends and help desk destinations
+- Publisher help desks stubbed (two of three destinations); the storefront's Zendesk is real
 - Chat only, not voice
 
 Every item is a decision already defended. The slide shows the boundary as intentional.
@@ -724,8 +732,8 @@ so raising it reads as considerate.
   run-through.
 - *Deck tooling* → Figma Slides, exported to PDF. See §10.
 - *Escalation destinations* → **one real, two mocked.** Weber Impressions Zendesk is the
-  live one; set the trial up close to submission since it expires, and screenshot the ticket
-  list while it's active. The two publisher destinations are configured but stubbed. Never a
+  live one, via OAuth client credentials; a new trial means three values in `.env`, no code
+  change. Screenshot the ticket list while it's active. The two publisher destinations are configured but stubbed. Never a
   decision to make — a ratio to state out loud, so it reads as honest scoping rather than
   something a reviewer discovers.
 - *Return execution* → no auto-return. Cancel is autonomous because it's reversible;
@@ -736,6 +744,26 @@ so raising it reads as considerate.
 - *Recording* → no. Repo plus a rich README carries it. Clean-checkout test is what makes
   that safe.
 - *Journey beat count* → six.
+
+**Closed during the build (2026-08-21):**
+
+- *Retrieval* → a manifest of owner, language, and topic, and a tool that returns whole
+  documents. No embeddings. Summaries name topics, never facts — the first draft carried
+  facts and the model answered from the manifest without reading.
+- *Cancellation* → session-scoped. The successful `cancel_line` call in the transcript is
+  the record; the publisher keys are read-only by design and a persisted cancel would break
+  the next reviewer's run.
+- *Publisher 3* → the adapter hands the French email to the model; no regex, no date parsing.
+  The email states the estimated arrival directly, so the *policy* has a gap and the *order
+  record* doesn't.
+- *Beat `aaa` input* → changed to a general shipping question. The original read as a
+  question about this order and the model correctly checked the records first.
+- *Publisher 1 title* → *William Eggleston's Guide*; *Portraits* is a home-grid cover only.
+- *Concierge pane* → white with a vertical rule, as the comp. Not the grey.
+- *Tool events* → streamed to the browser as they fire (newline-delimited JSON), shown in red,
+  collapsed to one line once the reply lands.
+- *Reply text* → everything the model says in a turn, before and after tool calls. Returning
+  only the final message dropped the booksellers' line at `fff`.
 
 ---
 
