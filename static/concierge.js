@@ -13,6 +13,7 @@ const ORDER = Object.keys(SHORTCUTS);
 
 let messages = [];
 let step = 0; // index into ORDER of the next shortcut to suggest
+let finished = false; // the reviewer went their own way at the last step; stop hinting
 
 const conversation = document.getElementById("conversation");
 const composer = document.getElementById("composer");
@@ -21,9 +22,11 @@ const send = document.getElementById("send");
 const hint = document.getElementById("hint");
 
 function showHint() {
-  if (step === 0) hint.innerHTML = "Type <code>aaa</code> to begin";
-  else if (step < ORDER.length) hint.innerHTML = `Next: <code>${ORDER[step]}</code>`;
-  else hint.innerHTML = "";
+  const last = ORDER.length - 1;
+  if (finished || step > last) hint.innerHTML = "";
+  else if (step === 0) hint.innerHTML = "Type <code>aaa</code> to begin";
+  else if (step === last) hint.innerHTML = `Type <code>${ORDER[last]}</code> to finish`;
+  else hint.innerHTML = `Type <code>${ORDER[step]}</code> to continue`;
   composer.classList.toggle("typing", input.value.length > 0);
 }
 
@@ -121,6 +124,7 @@ composer.addEventListener("submit", async (e) => {
   if (!text || send.disabled) return;
 
   if (step < ORDER.length && text === SHORTCUTS[ORDER[step]]) step += 1;
+  else if (step === ORDER.length - 1) finished = true; // something other than fff at the end: that's the finish
   showHint();
 
   add("you", text);
