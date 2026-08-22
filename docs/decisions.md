@@ -1,4 +1,4 @@
-# Bookly agent — build decisions
+# Concierge agent — build decisions
 
 Full record of the assignment read-through: what was considered, what was decided, why, and
 what's still open. Written as a record, deliberately — the reasoning is here so it can be
