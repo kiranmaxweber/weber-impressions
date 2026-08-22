@@ -44,3 +44,8 @@ do differently."
   a tool call — the booksellers' line at `fff` — reached the ticket transcript but never the
   screen. Found by comparing journey.md to what the reviewer sees. Reply is now every text
   block of the turn.
+- 2026-08-21 — Mid-journey probes found two leaks. The publisher stubs returned a string
+  where Zendesk returns a number, and the model read it as one: "request #logged to
+  publisher-1 (stubbed destination)". Stubs now return no reference. And asked to un-cancel,
+  the model said "there's no tool for that" — true, and not the customer's business. Rule
+  added: never mention tools or mechanics; say what you can and can't do in their terms.
