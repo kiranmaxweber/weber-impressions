@@ -37,14 +37,14 @@
       <h2>Concierge</h2>
       <div class="conversation" id="conversation">
         <!-- Static. No call on page load: a greeting isn't a reasoning task. -->
-        <div class="turn assistant">Hello. I have order #94105 in front of me — three books, three publishers. What can I help with?</div>
+        <div class="turn assistant">Hello. I have order <strong>#94105</strong> in front of me — three books, three publishers. What can I help with?</div>
       </div>
       <form class="composer" id="composer">
         <div class="box">
           <textarea id="input" aria-label="Message Concierge"></textarea>
           <div class="hint" id="hint" aria-hidden="true"></div>
         </div>
-        <button class="button" type="submit" id="send">Send</button>
+        <button class="button" type="submit" id="send" aria-label="Send">→</button>
       </form>
     </section>
   </main>
