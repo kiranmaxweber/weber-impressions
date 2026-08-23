@@ -84,7 +84,6 @@ main { flex: 1; display: flex; flex-direction: column; }
   flex-shrink: 0;
   border-top: var(--rule);
   font-size: var(--text-small);
-  font-weight: 700;
   line-height: normal;
 }
 .site-footer .contained {
