@@ -87,11 +87,11 @@ Cover, thesis, architecture, decisions, change. [View it in Figma](https://www.f
 
 - The architecture, journey, writing, and design are mine.
 - The code was written by Claude Code under my direction.
-- [BBEdit](https://www.barebones.com/products/bbedit/index.html), black coffee, Chrome, Claude Code, [El Toro Loco](https://www.monsterjam.com/en-us/truck/el-toro-loco), Figma, [Ghostty](https://ghostty.org), [iA Writer](https://ia.net/writer), [OmniFocus](https://www.omnigroup.com/omnifocus), [photobooks](https://www.mackbooks.us/products/hibi-br-masahisa-fukase), Post-its, Raycast, SONOS, and [xScope](https://xscopeapp.com).
+- [BBEdit](https://www.barebones.com/products/bbedit/index.html), black coffee, Chrome, Claude Code, [El Toro Loco](https://www.monsterjam.com/en-us/truck/el-toro-loco), Figma, [iA Writer](https://ia.net/writer), [OmniFocus](https://www.omnigroup.com/omnifocus), [photobooks](https://www.mackbooks.us/products/hibi-br-masahisa-fukase), Post-its, Raycast, SONOS, and [xScope](https://xscopeapp.com).
 
 ## License
 
 Code © 2026 Kiran Max Weber. [Spectral](https://fonts.google.com/specimen/Spectral) is licensed under the [SIL Open Font License](static/fonts/OFL.txt) and self-hosted. Cover artwork belongs to its photographers and publishers, shown here as demo scaffolding.
 
 [^1]: The brief calls the fictional online bookstore Bookly but I took the liberty to call it Weber Impressions — impression is a print run, and the name reads like a press. Nothing else about the brief changed.
-[^2]: I’ve always been curious about Python, ever since reading [Paul Ford’s](https://en.wikipedia.org/wiki/Paul_Ford_%28technologist%29) [“What is code?”](https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code).
+[^2]: In honor of [Paul Ford’s](https://en.wikipedia.org/wiki/Paul_Ford_%28technologist%29) [“What is code?”](https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code).
