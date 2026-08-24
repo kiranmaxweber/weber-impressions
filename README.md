@@ -2,7 +2,7 @@
 
 **Weber Impressions**[^1] is a fictional online marketplace that sells photobooks from independent publishers like [Editorial RM](https://editorialrm.com), [GOST](https://gostbooks.com), [MACK](https://www.mackbooks.us), [RVB Books](https://rvb-books.com), [Setanta](https://www.setantabooks.com) and the like.
 
-Its customers are collectors — people who spend real money on short-run books and notice everything. **Concierge, the shop's support agent, takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. **The moments that matter** — a damaged book, a return, a recommendation — **belong to a person**.
+Its customers are collectors — people who spend real money on short-run books and notice everything. Concierge, the shop's support agent, **takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — **belong to a person**.
 
 ## Installation
 
@@ -37,16 +37,16 @@ There is no agent framework. The Anthropic SDK is called directly and the loop i
 ## Demo
 
 - Desktop only, 1440 wide; height follows the window.
-- Tested in Chrome Beta, Chrome, Firefox, and Safari on a [MacBook Pro (16-inch, M1, 2021)](https://support.apple.com/en-us/111901) and [MacBook Air (13-inch, M4, 2025)](https://support.apple.com/en-us/122209).
-- Reload the page for a fresh order — the transcript is the memory, and nothing persists.
+- Tested in Chrome, Chrome Beta, Firefox, and Safari on a [MacBook Pro (16-inch, M1, 2021)](https://support.apple.com/en-us/111901) and [MacBook Air (13-inch, M4, 2025)](https://support.apple.com/en-us/122209).
+- Navigation elements in red are where to click: the menu on the home page, the Sign In button, and the send arrow (→).
+- Credentials are pre-filled; authentication is out of scope.
+- Reload the page for a fresh conversation — the transcript is the memory, and nothing persists.
 
-photobookcollector@icloud.com placed one order for three books across three publishers. Placed Monday August 17; two shipping notifications received, waiting on one. The customer needs a gift by September 1 — they sign in to get help.
+**Scenario**
 
-Navigation elements in red are where to click: the menu on the home page, Sign In button, and the send arrow (→).
+> photobookcollector@icloud.com placed one order for three books across three publishers. Placed Monday August 17; two shipping notifications received, waiting on one. The customer needs a gift by September 1 — they sign in to get help.
 
-1. **Home** → the menu (top right) → **Sign In** → the button. Credentials are pre-filled; nothing is checked. Authentication is out of scope, and the point of the portal is that identity and order are resolved before anyone types.
-2. **Order #94105 | Concierge.** Type `aaa` in the box. It expands into the first message without sending, so you can read it first. Send it. The hint in the box advances — *Type
-   `bbb` to continue* — through *Type `fff` to finish*.
+Type `aaa` to begin. It expands into the first message without sending, so you can read it first. Send it. The hint in the box advances — *Type `bbb` to continue* — through *Type `fff` to finish*.
 
 | Snippet | Text | Result |
 |---|---|---|
@@ -81,7 +81,7 @@ Free-form input works at any point, so go off-road whenever you like. These were
 
 [![Concierge — the presentation](assets/weber-impressions-slides-cover.png)](https://www.figma.com/deck/BYzq85rekl3yPp4d6Okajh/Weber-Impressions)
 
-Five slides — thesis, architecture, decisions, change. [View it in Figma](https://www.figma.com/deck/BYzq85rekl3yPp4d6Okajh/Weber-Impressions) or read the [PDF](assets/weber-impressions-slides.pdf).
+Cover, thesis, architecture, decisions, change. [View it in Figma](https://www.figma.com/deck/BYzq85rekl3yPp4d6Okajh/Weber-Impressions) or read the [PDF](assets/weber-impressions-slides.pdf).
 
 ## Colophon
 
@@ -93,5 +93,5 @@ Five slides — thesis, architecture, decisions, change. [View it in Figma](http
 
 Code © 2026 Kiran Max Weber. [Spectral](https://fonts.google.com/specimen/Spectral) is licensed under the [SIL Open Font License](static/fonts/OFL.txt) and self-hosted. Cover artwork belongs to its photographers and publishers, shown here as demo scaffolding.
 
-[^1]: The brief calls the online fictional bookstore Bookly but I took the liberty to call it Weber Impressions — impression is a print run, and the name reads like a press. Nothing else about the brief changed.
-[^2]: I’ve always been curious about Python, ever since reading [Paul Ford’s](https://en.wikipedia.org/wiki/Paul_Ford_%28technologist%29) [“What is code?”](https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code)
+[^1]: The brief calls the fictional online bookstore Bookly but I took the liberty to call it Weber Impressions — impression is a print run, and the name reads like a press. Nothing else about the brief changed.
+[^2]: I’ve always been curious about Python, ever since reading [Paul Ford’s](https://en.wikipedia.org/wiki/Paul_Ford_%28technologist%29) [“What is code?”](https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code).
