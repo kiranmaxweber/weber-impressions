@@ -4,6 +4,8 @@
 
 Its customers are collectors — people who spend real money on short-run books and notice everything. Concierge, the shop's support agent, **takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — **belong to a person**.
 
+![Concierge answering the first scripted message on the Order page](assets/weber-impressions-order-concierge.png)
+
 ## Installation
 
 Python[^2] 3.10 or newer — a Mac without developer tools has none; the [python.org installer](https://www.python.org/downloads/) is the two-minute fix.
