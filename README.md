@@ -1,63 +1,71 @@
-# Weber Impressions — Concierge
+# Weber Impressions’ “Concierge”
 
-A customer support agent for a storefront that sells photobooks from independent publishers.
-One order, three publishers, three fulfilment realities.
+**Weber Impressions**[^1] is a fictional online marketplace that sells photobooks from independent publishers like [Editorial RM](https://editorialrm.com), [GOST](https://gostbooks.com), [MACK](https://www.mackbooks.us), [RVB Books](https://rvb-books.com), [Setanta](https://www.setantabooks.com) and the like.
 
-> A support agent's job is to know which truths are its own and which belong to someone
-> else — and to route accordingly.
+> Routine work is the agent's; the moments that matter are guaranteed to a person.
 
-Concierge answers what it can source, names what it can't, acts on what's reversible, and
-routes what belongs to a person.
+## Installation
 
-*(The brief calls the store Bookly. It's Weber Impressions here — an impression is a print
-run, and the name reads like a press. Nothing else about the brief changed.)*
-
-## Run it
-
-Python 3.10 or newer.
+Python[^2] 3.10 or newer.
 
 ```bash
 git clone https://github.com/kiranmaxweber/weber-impressions.git && cd weber-impressions
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # then paste your Anthropic key into ANTHROPIC_API_KEY
+cp .env.example .env        # paste your key into ANTHROPIC_API_KEY — the server exits with one line if it's missing
 python server.py
 ```
 
-Open [http://localhost:8000](http://localhost:8000). The server prints one line and exits if
-the key is missing.
+Open [http://localhost:8000](http://localhost:8000) in any browser.
 
-The three publisher databases are live Supabase projects; their read-only keys are in the
-adapters, so the only credential you supply is the Anthropic key.
+The publisher databases are live [Supabase](https://supabase.com) projects; their read-only keys are in the adapters, so the only credential you supply is your [Anthropic key](https://platform.claude.com/settings/keys).
 
-## The path
+I tested this in Chrome Beta, Chrome, Firefox, and Safari on a [MacBook Pro (16-inch, M1, 2021)](https://support.apple.com/en-us/111901) and [MacBook Air (13-inch, M4, 2025)](https://support.apple.com/en-us/122209).
 
-Red marks where to click: the menu on the home page, Sign in, the send arrow.
+```
+server.py              Static files and POST /chat. Stateless; the browser holds the transcript.
+agent/loop.py          The tool-calling loop, written out. ~40 lines.
+agent/tools.py         Five tools and the one gate that matters: cancel only if uncharged.
+agent/prompts.py       The system prompt and the FAQ manifest.
+agent/escalation.py    Handoff payload, destination by ownership, the turn-count backstop.
+agent/order.py         The order as the portal knows it — what was bought, what was charged.
+publishers/            Three adapters and the SQL that built their tables.
+faqs/                  25 documents, organised by owner, three languages, no translations.
+static/                Three screens. Semantic HTML, custom properties, vanilla JS.
+```
 
-1. **Home** → the menu (top right) → **Sign in** → the button. Credentials are pre-filled;
-   nothing is checked. Authentication is out of scope, and the point of the portal is that
-   identity and order are resolved before anyone types.
-2. **Order #94105 | Concierge.** Type `aaa` in the box. It expands into the first message
-   without sending, so you can read it first. Send it. The hint in the box advances — *Type
+There is no agent framework. The Anthropic SDK is called directly and the loop is in the file.
+
+The model is `claude-sonnet-5`.
+
+
+## Demo
+
+- Desktop only, 1440 wide; height follows the window.
+- Reload the page for a fresh order — the transcript is the memory, and nothing persists.
+
+photobookcollector@icloud.com placed one order for three books across three publishers. Placed Monday August 17; two shipping notifications received, waiting on one. The customer needs a gift by September 1 — they sign in to get help.
+
+Navigation elements in red are where to click: the menu on the home page, Sign In button, and the send arrow (→).
+
+1. **Home** → the menu (top right) → **Sign In** → the button. Credentials are pre-filled; nothing is checked. Authentication is out of scope, and the point of the portal is that identity and order are resolved before anyone types.
+2. **Order #94105 | Concierge.** Type `aaa` in the box. It expands into the first message without sending, so you can read it first. Send it. The hint in the box advances — *Type
    `bbb` to continue* — through *Type `fff` to finish*.
 
-| | You type | What to notice |
+| Snippet | Text | Result |
 |---|---|---|
-| `aaa` | How long does shipping usually take… | Answered from three publishers' policy documents, in three languages. Publisher 3 has no shipping document — the gap is named, not filled. |
-| `bbb` | Where do mine actually stand? | Three live lookups: clean JSON, renamed Spanish fields, and a French confirmation email the model reads a date out of. |
+| `aaa` | How long does shipping usually take from your publishers? I ordered three books last week and only two have shipping notifications. | Answered from three publishers' policy documents, in three languages. Publisher 3 has no shipping document — the gap is named, not filled. |
+| `bbb` | No need. Where do mine actually stand? | Three live lookups: clean JSON, renamed Spanish fields, and a French confirmation email the model reads a date out of. |
 | `ccc` | One of those won't arrive in time. | Ambiguous, so it asks — which line, and by when — once. |
 | `ddd` | The third. I need it by September 1. | Offers to cancel, not return, because nothing has shipped. |
 | `eee` | Yes, do that. | The autonomous action. Reversible, uncharged, gated in code. |
-| `fff` | Any recommendations? | Declines — that's the booksellers' work — and opens a request with Weber Impressions. |
+| `fff` | I still need a gift by September 1. Any recommendations? | Declines — that's the booksellers' work — and opens a request with Weber Impressions. |
 
-Every reply is generated by the model at runtime. What's scripted is what you type; the
-reasoning between the guardrails is real, so replies differ between runs. That's evidence
-the thing is live, not a defect.
+What's scripted is what you type. Every reply is the model reasoning at runtime, so no two runs read the same.
 
-Go off script whenever you like. These were all run against the build; try them at the
-point in the journey where they'd come up.
+Free-form input works at any point, so go off-road whenever you like. These were all run against the build; try them at the point in the journey where they'd come up.
 
-| Try | What happens |
+| Text | Result |
 |---|---|
 | *The third. I needed it by June 1, 2026.* | Notes the date has passed; still offers the cancel, since nothing has shipped. |
 | *The third. I need it by December 12.* | September 8 is in time. No action offered. |
@@ -73,95 +81,21 @@ point in the journey where they'd come up.
 | *Do you have any other Meyerowitz titles?* | The booksellers' work. Opens a request rather than listing books. |
 | *Just let me talk to a person.* | Opens the request immediately. No questions. |
 
-## What's in the box
+## Presentation
 
-```
-server.py              Static files and POST /chat. Stateless; the browser holds the transcript.
-agent/loop.py          The tool-calling loop, written out. ~40 lines.
-agent/tools.py         Five tools and the one gate that matters: cancel only if uncharged.
-agent/prompts.py       The system prompt and the FAQ manifest.
-agent/escalation.py    Handoff payload, destination by ownership, the turn-count backstop.
-agent/order.py         The order as the portal knows it — what was bought, what was charged.
-publishers/            Three adapters and the SQL that built their tables.
-faqs/                  25 documents, organised by owner, three languages, no translations.
-static/                Three screens. Semantic HTML, custom properties, vanilla JS.
-```
+[![Concierge — the presentation](assets/weber-impressions-slides-cover.png)](https://www.figma.com/deck/BYzq85rekl3yPp4d6Okajh/Weber-Impressions)
 
-No agent framework. The Anthropic SDK is called directly and the loop is in the file.
+Five slides — thesis, architecture, decisions, change. [View it in Figma](https://www.figma.com/deck/BYzq85rekl3yPp4d6Okajh/Weber-Impressions) or read the [PDF](assets/weber-impressions-slides.pdf).
 
-`/chat` streams: one line per tool call as it fires, then the reply, so the page shows
-*Reading publisher-2/envios.md…* while that's what's happening, not after.
+## Colophon
 
-The model is `claude-sonnet-5`. A full run of the six beats costs a few cents.
+- The adaptation, architecture, journey, writing, and design are mine
+- The code was written by Claude Code under my direction
+- [BBEdit](https://www.barebones.com/products/bbedit/index.html), black coffee, Chrome, Claude Code, [El Toro Loco](https://www.monsterjam.com/en-us/truck/el-toro-loco), Figma, [Ghostty](https://ghostty.org), [iA Writer](https://ia.net/writer), [OmniFocus](https://www.omnigroup.com/omnifocus), [photobooks](https://www.mackbooks.us/products/hibi-br-masahisa-fukase), Post-its, Raycast, SONOS, and [xScope](https://xscopeapp.com)
 
-## Decisions worth knowing before you read the code
+## License
 
-**Reversibility draws the action line, not confidence and not value.** The model decides
-what to do; code decides what's allowed. `cancel_line` checks Weber Impressions' own charge
-record, then the publisher's status. A charged line has shipped and is the publisher's to
-deal with. A $150 cancellation on an unshipped book needs no human; a $5 refund on a shipped
-one does.
+Code © 2026 Kiran Max Weber. [Spectral](https://fonts.google.com/specimen/Spectral) is licensed under the [SIL Open Font License](static/fonts/OFL.txt) and self-hosted. Cover artwork belongs to its photographers and publishers, shown here as demo scaffolding.
 
-**Retrieval is a manifest, not a vector store.** The model sees every document's owner,
-language, and topic, and reads whole documents. 25 small files don't need embeddings, and
-keyword search fails exactly where this design lives — an English customer asking about
-returns needs `publisher-2/devoluciones.md`.
-
-**Escalation is routing, not failure.** Destination follows ownership. The payload keeps its
-shape — transcript, summary, intent, customer context, `destination`, `routing_reason`,
-`trigger` — and the target varies. Weber Impressions goes to a real Zendesk via OAuth
-client credentials if `.env` has them; the ticket carries the summary, the order as it
-stands, and the whole conversation, with the customer as requester. Without them the payload
-is shown in the conversation rather than dropped silently. The two publisher desks are stubs
-that log. One real, two mocked.
-
-To see the real ticket, put a Zendesk trial's subdomain, OAuth client ID, and client secret
-in `.env` (the three `ZENDESK_` lines in `.env.example`). The OAuth client has to be
-*Confidential* — Zendesk no longer issues API tokens to new accounts. The ticket lands with
-the customer as requester and the order number in a custom field.
-
-**The backstop is deterministic; the signal is not.** Six customer turns without a tool call
-force an `escalate` call — code decides it's time, the model writes the summary, and the
-payload records `trigger: turn_limit` so a forced handoff never passes for a chosen one.
-There is no sentiment word list and no scanning of replies.
-
-**Cancellation lives in the transcript.** The publisher keys are read-only by design, and a
-persisted cancel would leave the next reviewer's order already cancelled. The successful
-tool call in the message list is the record; reloading the page resets the order.
-
-## Assumptions
-
-<!-- KIRAN: placeholder — edit in your voice. Each is a decision, not an apology. -->
-
-- **A signed-in portal, not a widget.** Identity and the order are resolved before anyone
-  types. Authentication itself is out of scope; on an anonymous channel the agent would need
-  an identity step and a class of guardrails this build doesn't have.
-- **Chat, not voice.** The loop is the same; under a voice latency budget the tool calls
-  would have to move.
-- **The FAQs are authored, not scraped.** So the gap at Publisher 3 could be placed
-  deliberately, and nothing here is a claim about a real press.
-- **Publishers are numbered, not named.** Real models exist; they belong in the deck.
-- **Two of three help desks are stubs.** The payload keeps its shape; only the wire differs.
-- **Cancellation isn't persisted.** The publisher keys are read-only, and every reviewer
-  should get a fresh order.
-
-## How this was built
-
-<!-- KIRAN: placeholder — edit in your voice. The brief expects assistant use; say what was directed vs. written. -->
-
-Directed, not typed. The architecture, the thesis, every decision in this README, the FAQ
-corpus, the journey script, and the design comps are mine. The Python, JavaScript, and CSS
-were written by Claude Code under direction — each change explained before it went in, and
-nothing went in that I couldn't explain back. The friction log of what went wrong along the
-way is the source for the "what I'd do differently" slide.
-
-## Known limits
-
-<!-- KIRAN: placeholder — edit. -->
-
-- Sign-in is a navigation, not an authentication.
-- Desktop only, 1440 wide; height follows the window.
-- Replies differ between runs. The guardrails are deterministic; the prose isn't.
-- The Zendesk trial expires. Renewal is three values in `.env`, no code change.
-- The three Supabase projects are live dependencies, kept up through the review.
-- No memory across sessions. The transcript is the memory; reload and it's gone.
+[^1]: The brief calls the online fictional bookstore Bookly but I took the liberty to call it Weber Impressions — impression is a print run, and the name reads like a press. Nothing else about the brief changed.
+[^2]: I’ve always been curious about Python, ever since reading [Paul Ford’s](https://en.wikipedia.org/wiki/Paul_Ford_%28technologist%29) [“What is code?”](https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code)
