@@ -4,8 +4,6 @@
 
 Its customers are collectors — people who spend real money on short-run books and notice everything. Concierge, the shop's support agent, takes the routine: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — belong to a person.
 
-
-
 > Routine work is the agent's; the moments that matter are guaranteed to a person.
 
 ## Installation
