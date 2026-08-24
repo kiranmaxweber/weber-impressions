@@ -85,9 +85,9 @@ Cover, thesis, architecture, decisions, change. [View it in Figma](https://www.f
 
 ## Colophon
 
-- The adaptation, architecture, journey, writing, and design are mine
-- The code was written by Claude Code under my direction
-- [BBEdit](https://www.barebones.com/products/bbedit/index.html), black coffee, Chrome, Claude Code, [El Toro Loco](https://www.monsterjam.com/en-us/truck/el-toro-loco), Figma, [Ghostty](https://ghostty.org), [iA Writer](https://ia.net/writer), [OmniFocus](https://www.omnigroup.com/omnifocus), [photobooks](https://www.mackbooks.us/products/hibi-br-masahisa-fukase), Post-its, Raycast, SONOS, and [xScope](https://xscopeapp.com)
+- The architecture, journey, writing, and design are mine.
+- The code was written by Claude Code under my direction.
+- [BBEdit](https://www.barebones.com/products/bbedit/index.html), black coffee, Chrome, Claude Code, [El Toro Loco](https://www.monsterjam.com/en-us/truck/el-toro-loco), Figma, [Ghostty](https://ghostty.org), [iA Writer](https://ia.net/writer), [OmniFocus](https://www.omnigroup.com/omnifocus), [photobooks](https://www.mackbooks.us/products/hibi-br-masahisa-fukase), Post-its, Raycast, SONOS, and [xScope](https://xscopeapp.com).
 
 ## License
 
