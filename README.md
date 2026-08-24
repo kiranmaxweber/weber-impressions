@@ -6,7 +6,7 @@ Its customers are collectors — people who spend real money on short-run books 
 
 ## Installation
 
-Python[^2] 3.10 or newer.
+Python[^2] 3.10 or newer — a Mac without developer tools has none; the [python.org installer](https://www.python.org/downloads/) is the two-minute fix.
 
 ```bash
 git clone https://github.com/kiranmaxweber/weber-impressions.git && cd weber-impressions
