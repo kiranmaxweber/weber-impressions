@@ -2,9 +2,7 @@
 
 **Weber Impressions**[^1] is a fictional online marketplace that sells photobooks from independent publishers like [Editorial RM](https://editorialrm.com), [GOST](https://gostbooks.com), [MACK](https://www.mackbooks.us), [RVB Books](https://rvb-books.com), [Setanta](https://www.setantabooks.com) and the like.
 
-Its customers are collectors — people who spend real money on short-run books and notice everything. Concierge, the shop's support agent, takes the routine: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — belong to a person.
-
-> Routine work is the agent's; the moments that matter are guaranteed to a person.
+Its customers are collectors — people who spend real money on short-run books and notice everything. **Concierge, the shop's support agent, takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. **The moments that matter** — a damaged book, a return, a recommendation — **belong to a person**.
 
 ## Installation
 
@@ -22,11 +20,9 @@ Open [http://localhost:8000](http://localhost:8000) in any browser.
 
 The publisher databases are live [Supabase](https://supabase.com) projects; their read-only keys are in the adapters, so the only credential you supply is your [Anthropic key](https://platform.claude.com/settings/keys).
 
-I tested this in Chrome Beta, Chrome, Firefox, and Safari on a [MacBook Pro (16-inch, M1, 2021)](https://support.apple.com/en-us/111901) and [MacBook Air (13-inch, M4, 2025)](https://support.apple.com/en-us/122209).
-
 ```
 server.py              Static files and POST /chat. Stateless; the browser holds the transcript.
-agent/loop.py          The tool-calling loop, written out. ~40 lines.
+agent/loop.py          The tool-calling loop, written out.
 agent/tools.py         Five tools and the one gate that matters: cancel only if uncharged.
 agent/prompts.py       The system prompt and the FAQ manifest.
 agent/escalation.py    Handoff payload, destination by ownership, the turn-count backstop.
@@ -36,14 +32,12 @@ faqs/                  25 documents, organised by owner, three languages, no tra
 static/                Three screens. Semantic HTML, custom properties, vanilla JS.
 ```
 
-There is no agent framework. The Anthropic SDK is called directly and the loop is in the file.
-
-The model is `claude-sonnet-5`.
-
+There is no agent framework. The Anthropic SDK is called directly and the loop is in the file. The model is `claude-sonnet-5`.
 
 ## Demo
 
 - Desktop only, 1440 wide; height follows the window.
+- Tested in Chrome Beta, Chrome, Firefox, and Safari on a [MacBook Pro (16-inch, M1, 2021)](https://support.apple.com/en-us/111901) and [MacBook Air (13-inch, M4, 2025)](https://support.apple.com/en-us/122209).
 - Reload the page for a fresh order — the transcript is the memory, and nothing persists.
 
 photobookcollector@icloud.com placed one order for three books across three publishers. Placed Monday August 17; two shipping notifications received, waiting on one. The customer needs a gift by September 1 — they sign in to get help.
