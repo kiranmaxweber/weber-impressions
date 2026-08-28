@@ -2,7 +2,7 @@
 
 **Weber Impressions**[^1] is a fictional online marketplace that sells photobooks from independent publishers like [Editorial RM](https://editorialrm.com), [GOST](https://gostbooks.com), [MACK](https://www.mackbooks.us), [RVB Books](https://rvb-books.com), [Setanta](https://www.setantabooks.com) and the like.
 
-Its customers are collectors — people who spend real money on short-run books and notice everything. Concierge, the shop's support agent, **takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — **belong to a person**.
+Its customers are collectors — people who spend real money on short-run books and notice everything. **Concierge**, the shop's support agent, **takes the routine**: where an order stands, what a policy says, a cancellation before anything ships. The moments that matter — a damaged book, a return, a recommendation — **belong to a person**.
 
 ![Concierge answering the first scripted message on the Order page](assets/weber-impressions-order-concierge.png)
 
